@@ -22,7 +22,7 @@ public class CachedBasketRepository
         
         var cachedBasket = await cache.GetStringAsync(userName, cancellationToken);
         if (!string.IsNullOrEmpty(cachedBasket))
-            return JsonSerializer.Deserialize<ShoppingCart>(cachedBasket!, _options)!;
+            return JsonSerializer.Deserialize<ShoppingCart>(cachedBasket, _options)!;
         
         
         // if data doesn't exist in the cache, get it from db save it on the cache and return it
@@ -30,6 +30,7 @@ public class CachedBasketRepository
         var basket = await repository.GetBasket(userName, asNoTracking, cancellationToken);
         
         await cache.SetStringAsync(userName, JsonSerializer.Serialize(basket, _options), cancellationToken);
+       
         return basket;
     }
 

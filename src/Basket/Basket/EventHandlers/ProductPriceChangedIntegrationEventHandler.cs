@@ -1,8 +1,3 @@
-using Basket.Features.UpdateItemPriceInBasket;
-using MassTransit;
-using Microsoft.Extensions.Logging;
-using Shared.Messaging.Events;
-
 namespace Basket.EventHandlers;
 
 public class ProductPriceChangedIntegrationEventHandler

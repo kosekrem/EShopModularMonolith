@@ -9,7 +9,7 @@ public class ShoppingCartItem : Entity<Guid>
     public int Quantity { get; internal set; } = default!;
     public string Color { get; private set; } = default!;
 
-    // will come from Catalog module
+    // will comes from Catalog module
     public decimal Price { get; private set; } = default!;
     public string ProductName { get; private set; } = default!;
 
@@ -22,10 +22,11 @@ public class ShoppingCartItem : Entity<Guid>
         Price = price;
         ProductName = productName;
     }
-    
+
     [JsonConstructor]
     public ShoppingCartItem(Guid id, Guid shoppingCartId, Guid productId, int quantity, string color, decimal price, string productName)
     {
+        Id = id;
         ShoppingCartId = shoppingCartId;
         ProductId = productId;
         Quantity = quantity;

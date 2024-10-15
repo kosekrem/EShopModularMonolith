@@ -1,3 +1,5 @@
+using Keycloak.AuthServices.Authentication;
+
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Host.UseSerilog((context, config) =>
@@ -12,14 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
     
     
     // common services: carter, mediatr, fluentvalidation
-    builder.Services.AddMediatRWithAssemblies(catalogAssembly, basketAssembly);
-    builder.Services.AddCarterWithAssemblies(catalogAssembly, basketAssembly);
-    builder.Services.AddValidatorsFromAssemblies([catalogAssembly, basketAssembly]);
+    builder.Services.AddMediatRWithAssemblies(catalogAssembly, basketAssembly, orderingAssembly);
+    builder.Services.AddCarterWithAssemblies(catalogAssembly, basketAssembly, orderingAssembly);
+    builder.Services.AddValidatorsFromAssemblies([catalogAssembly, basketAssembly, orderingAssembly]);
     builder.Services.AddStackExchangeRedisCache(options =>
     {
         options.Configuration = builder.Configuration.GetConnectionString("Redis");
     });
-    builder.Services.AddMassTransitWithAssemblies(builder.Configuration, basketAssembly, catalogAssembly);
+    builder.Services
+        .AddMassTransitWithAssemblies(builder.Configuration, basketAssembly, catalogAssembly, orderingAssembly);
+    builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
+    builder.Services.AddAuthorization();
     
     // module services: catalog, basket, ordering
     builder.Services
@@ -38,6 +43,8 @@ var app = builder.Build();
     app.MapCarter();
     app.UseSerilogRequestLogging();
     app.UseExceptionHandler(options => {});
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     
     app

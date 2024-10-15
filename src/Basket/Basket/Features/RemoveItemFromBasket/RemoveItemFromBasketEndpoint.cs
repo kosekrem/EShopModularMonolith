@@ -10,18 +10,19 @@ public class RemoveItemFromBasketEndpoint : ICarterModule
                 [FromRoute] string userName,
                 [FromRoute] Guid productId,
                 ISender sender) =>
-        {
-            var command = new RemoveItemFromBasketCommand(userName, productId);
+            {
+                var command = new RemoveItemFromBasketCommand(userName, productId);
 
-            var result = await sender.Send(command);
+                var result = await sender.Send(command);
 
-            var response = result.Adapt<RemoveItemFromBasketResponse>();
+                var response = result.Adapt<RemoveItemFromBasketResponse>();
 
-            return Results.Ok(response);
-        })
-        .Produces<RemoveItemFromBasketResponse>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithSummary("Remove Item From Basket")
-        .WithDescription("Remove Item From Basket");
+                return Results.Ok(response);
+            })
+            .Produces<RemoveItemFromBasketResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .WithSummary("Remove Item From Basket")
+            .WithDescription("Remove Item From Basket")
+            .RequireAuthorization();
     }
 }
